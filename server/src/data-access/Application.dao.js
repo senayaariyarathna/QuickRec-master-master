@@ -178,16 +178,11 @@ const getApplicationAchvDetails = async (req) => {
 
 
 
-const getApplicantsDetails = async (req, res) => {
-  const { userId } = req.query;
-  
-  if (!userId) {
-    throw new Error('User ID is required');
-  }
-
+const getAllApplicantsDetails = async (req) => {
+  const { vacancyId } = req.query;
   try {
-    const results = await req.app.locals.db.query(
-      `SELECT
+    let queryString = `
+      SELECT
         bd.NameWithInitials,
         bd.DateOfBirth,
         bd.Sex,
@@ -195,28 +190,38 @@ const getApplicantsDetails = async (req, res) => {
         bd.NIC,
         bd.MobileNo1,
         bd.AddressLine1,
+        v.VacancyName,
         ed.instituteName,
         ed.fieldOfStudy,
         ed.grade,
         ed.startDate,
-        ed.endDate
-        
-       
+        ed.endDate,
+        bd.UserId
       FROM
         ApplicationBasicDetails AS bd
       LEFT JOIN
         ApplicationEduDetails AS ed ON bd.UserId = ed.userId
-      WHERE bd.UserId = ${userId}`,
-      
-    );
+      LEFT JOIN
+        Applications AS a ON bd.UserId = a.UserId
+      LEFT JOIN
+        Vacancies AS v ON a.VacancyId = v.VacancyId`;
 
-    return results.recordset.length > 0 ? results.recordset[0] : null;
+    if (vacancyId) {
+      queryString += ` WHERE a.VacancyId = ${vacancyId}`;
+    }
+
+    const results = await req.app.locals.db.query(queryString);
+    return {
+      data: results.recordset,
+      vacancyName: results.recordset[0]?.VacancyName,
+      VacancyId: results.recordset.VacancyId
+
+    };
   } catch (error) {
     console.error('Database query error:', error);
     throw error;
   }
 };
-
 
 // .............................................................................api pinithi 
 
@@ -429,7 +434,7 @@ export {
   createExpDetails,
   createAchveDetails,
   getApplicationAchvDetails,
-  getApplicantsDetails,
+  // getApplicantsDetails,
   getApplicationExpDetails,
   deleteExpDetails,
   deleteAchvDetails,
@@ -441,4 +446,5 @@ export {
   getApplicationBasicDetailsByApplication,
   ApproveQualification,
   finaliseApplication,
+  getAllApplicantsDetails,
 };

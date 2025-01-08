@@ -12,7 +12,8 @@ import {
   getEduDetails,
   getExpDetails,
   getUserApplication,
-  getApplicantsDetails
+  getAllApplicantsDetails
+
 } from "../controllers/applicationController.js";
 
 const router = express.Router();
@@ -29,8 +30,6 @@ router.delete("/deleteAchvDetails", deleteAchvDetails);
 router.get("/userApplication", getUserApplication);
 router.post("/approve", approveQualification);
 router.post("/reviewed", evaluateAppliaction);
-router.get("/ApplicantsDetails", getApplicantsDetails);
-// router.get("/ApplicantsDetails/:userId", getApplicantsDetails);
-
+router.get("/AllApplicantsDetails", getAllApplicantsDetails);
 
 export default router;

@@ -40,6 +40,7 @@ Vacancy.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
+  
     ClosingDate: {
       type: DataTypes.DATE,
       allowNull: false,

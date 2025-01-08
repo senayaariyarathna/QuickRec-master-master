@@ -171,21 +171,35 @@ export const getAchvDetails = async (req, res) => {
 
 //pinithi
 
-export const getApplicantsDetails = async (req, res) => {
-  try {
-    const data = await ApplicationDAO.getApplicantsDetails(req);
+// export const getAllApplicantsDetails = async (req, res) => {
+//   try {
+//     const data = await ApplicationDAO.getAllApplicantsDetails(req);
     
-    if (!data) {
+//     if (!data || data.length === 0) {
+//       return res.status(404).json({ message: "No applicant details found" });
+//     }
+    
+//     res.status(200).json({ data });
+//   } catch (error) {
+//     console.error('Error in getAllApplicantsDetails:', error);
+//     res.status(500).json({ message: "Something went wrong!" });
+//   }
+// };
+
+export const getAllApplicantsDetails = async (req, res) => {
+  try {
+    const data = await ApplicationDAO.getAllApplicantsDetails(req);
+    
+    if (!data || data.data.length === 0) {
       return res.status(404).json({ message: "No applicant details found" });
     }
     
-    res.status(200).json({ data });
+    res.status(200).json(data);
   } catch (error) {
-    console.error('Error in getApplicantsDetails:', error);
+    console.error('Error in getAllApplicantsDetails:', error);
     res.status(500).json({ message: "Something went wrong!" });
   }
 };
-
 
 //pinithi
 
